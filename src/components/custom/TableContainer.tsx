@@ -12,7 +12,7 @@ export const TableContainer = ({
 }) => {
 	return (
 		<ScrollArea
-			className={`h-[100vh] max-h-[calc(100vh-${height}rem)] min-h-[calc(100vh-${height}rem)]`}
+			className={`max-h-[calc(100vh-${height}rem)] min-h-[calc(100vh-${height}rem)] h-[calc(100vh-${height}rem)]`}
 		>
 			{children}
 		</ScrollArea>

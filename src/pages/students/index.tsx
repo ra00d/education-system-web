@@ -28,17 +28,15 @@ import {
 import { Button } from "@/components/ui/button";
 import { useLayoutEffect, useMemo, useState } from "react";
 import { useBearStore } from "@/common/stores";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { TableContainer } from "@/components/custom/TableContainer";
+import { ErrorComponent } from "@/components/custom/ErrorComponent";
+// import { ScrollArea } from "@/components/ui/scroll-area";
 export type Student = {
 	email: string;
 	id: number;
 	connected: boolean;
 	name?: string;
-	level: {
-		id?: number;
-		name: string;
-	};
+	level: string;
 };
 
 export const columns: ColumnDef<Student>[] = [
@@ -77,8 +75,8 @@ export const columns: ColumnDef<Student>[] = [
 		header: "ID",
 	},
 	{
-		// accessorKey: "level.name",
-		accessorFn: (student) => student.level.name,
+		accessorKey: "level",
+		// accessorFn: (student) => student.level.name,
 		header: "Level",
 	},
 	{
@@ -97,24 +95,28 @@ export const columns: ColumnDef<Student>[] = [
 export const StudentsList = () => {
 	const changePage = useBearStore((state) => state.changePage);
 	const [{ pageIndex, pageSize }, setPagination] = useState<PaginationState>({
-		pageSize: 10,
+		pageSize: 20,
 		pageIndex: 0,
 	});
 	const pagination = useMemo(
 		() => ({ pageSize, pageIndex }),
 		[pageIndex, pageSize],
 	);
-	const { data, isError, isLoading, error } = useQuery(
-		["all-student", { pageSize, pageIndex }],
-		{
-			// queryKey: "all-students",
-			queryFn: async () => {
-				return await apiClient.get(
-					`student/?page=${pageIndex + 1}&limit=${pageSize}`,
-				);
-			},
+	const { data, isError, isLoading, error } = useQuery<
+		// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+		any,
+		{ message?: string }
+	>(["all-student", { pageSize, pageIndex }], {
+		// queryKey: "all-students",
+		refetchOnMount: "always",
+		retry: 2,
+		staleTime: 0,
+		queryFn: async () => {
+			return await apiClient.get(
+				`student/?page=${pageIndex + 1}&limit=${pageSize}`,
+			);
 		},
-	);
+	});
 	const table = useReactTable({
 		data: data?.data?.result,
 		columns,
@@ -122,6 +124,7 @@ export const StudentsList = () => {
 		state: {
 			pagination,
 		},
+		// autoResetAll:true,
 		onPaginationChange: setPagination,
 		manualPagination: true,
 		getCoreRowModel: getCoreRowModel(),
@@ -134,14 +137,14 @@ export const StudentsList = () => {
 	}, [changePage]);
 	if (isLoading)
 		return (
-			<div className="max-h-[clac(100vh-20rem)] w-full flex justify-center items-center">
-				<Loading />
+			<div className="min-h-full w-full flex justify-center items-center">
+				<Loading size={48} />
 			</div>
 		);
-	if (isError) return <p>{JSON.stringify(error)}</p>;
+	if (isError) return <ErrorComponent message={error?.message} />;
 	return (
-		<>
-			<TableContainer>
+		<div className="max-h-[calc(100vh-15rem)] min-h-[calc(100vh-15rem)] h-[calc(100vh-15rem)]">
+			<TableContainer height={15}>
 				<Table className="border-separate border-spacing-y-4">
 					<TableHeader>
 						{table.getHeaderGroups().map((headerGroup) => (
@@ -149,7 +152,7 @@ export const StudentsList = () => {
 								{headerGroup.headers.map((header) => {
 									return (
 										<TableHead
-											className="sticky top-0 bg-primary z-50 first:rounded-l-md last:rounded-r-md"
+											className="sticky top-0 bg-background z-50 first:rounded-l-md last:rounded-r-md"
 											key={header.id}
 										>
 											{header.isPlaceholder
@@ -168,14 +171,14 @@ export const StudentsList = () => {
 						{table.getRowModel().rows?.length ? (
 							table.getRowModel().rows.map((row) => (
 								<TableRow
-									className="bg-gray-600"
+									className=""
 									key={row.id}
 									data-state={row.getIsSelected() && "selected"}
 								>
 									{row.getVisibleCells().map((cell) => (
 										<TableCell
 											key={cell.id}
-											className="first:rounded-l-md h-fit last:rounded-r-md"
+											className="first:rounded-l-md h-fit last:rounded-r-md last:border-r last:border-r-black  first:border-l first:border-l-black border-t border-b border-b-black border-t-black"
 										>
 											{flexRender(
 												cell.column.columnDef.cell,
@@ -198,7 +201,7 @@ export const StudentsList = () => {
 					</TableBody>
 				</Table>
 			</TableContainer>
-			<div className="flex items-center justify-center space-x-2 py-4">
+			<div className="flex z-10 rounded-md items-center justify-center gap-2 py-2">
 				<Button
 					variant="outline"
 					className="text-black"
@@ -218,6 +221,6 @@ export const StudentsList = () => {
 					Next
 				</Button>
 			</div>
-		</>
+		</div>
 	);
 };

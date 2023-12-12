@@ -1,10 +1,13 @@
 import Layout from "@/common/layouts";
+import { AccountsPage } from "@/pages/accounts/Accounts";
 import { ClassesPage } from "@/pages/classes";
 import { CoursesPage } from "@/pages/courses";
-import HomePage from "@/pages/home";
+import { DashboardPage } from "@/pages/dashborde/Dashboard";
+import { NotFoundPage } from "@/pages/errors/NotFoundPage";
 import LoginPage from "@/pages/login";
 import { MonitoringPage } from "@/pages/monitoring";
 import SignUp from "@/pages/signup";
+import { StudentForm } from "@/pages/students/student/Form";
 import { RouteObject, createBrowserRouter } from "react-router-dom";
 
 const getPageName = (pageName: string) => () => ({ pageName: pageName });
@@ -17,9 +20,14 @@ export const routes: RouteType[] = [
 		element: <Layout />,
 		children: [
 			{
-				loader: getPageName("accounts"),
 				path: "",
-				element: <HomePage />,
+				loader: getPageName("Home"),
+				element: <DashboardPage />,
+			},
+			{
+				loader: getPageName("accounts"),
+				path: "/accounts",
+				element: <AccountsPage />,
 			},
 			{
 				path: "classes",
@@ -36,6 +44,11 @@ export const routes: RouteType[] = [
 				loader: getPageName("monitoring"),
 				element: <MonitoringPage />,
 			},
+			{
+				path: "students/new",
+				loader: getPageName("add student"),
+				element: <StudentForm />,
+			},
 		],
 	},
 	{
@@ -45,6 +58,10 @@ export const routes: RouteType[] = [
 	{
 		path: "sign-up",
 		element: <SignUp />,
+	},
+	{
+		path: "*",
+		element: <NotFoundPage />,
 	},
 ];
 const AppRouter = createBrowserRouter(routes, {});

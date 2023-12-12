@@ -14,7 +14,7 @@ export const Navbar = () => {
 		<div className="flex mt-10 flex-col gap-5 z-50 items-center">
 			{navItems.map((item) => (
 				<TooltipProvider key={item.path}>
-					<Tooltip disableHoverableContent>
+					<Tooltip delayDuration={100} disableHoverableContent>
 						<NavLink
 							to={item.path}
 							className={({ isActive, isPending }) => {
@@ -22,7 +22,7 @@ export const Navbar = () => {
 									isPending
 										? "pending"
 										: isActive
-										? "bg-purple-500 text-white"
+										? "bg-[#2c3681] text-white"
 										: "bg-gray-200 ",
 									"px-2 py-2 rounded-md hover:bg-purple-500 hover:shadow-md hover:text-white",
 								);
@@ -36,7 +36,6 @@ export const Navbar = () => {
 							align="start"
 							alignOffset={10}
 							avoidCollisions={false}
-							className="bg-gray-700 z-[10000] !overflow-visible"
 						>
 							<p className="z-50">{item.title}</p>
 							<TooltipArrow />
