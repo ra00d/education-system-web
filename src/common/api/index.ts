@@ -1,11 +1,11 @@
 import axios from "axios";
-
+export const API_BASE_URL = "http://localhost:3000";
 const apiClient = axios.create({
-	baseURL: "http://localhost:3000",
+	baseURL: API_BASE_URL,
 	headers: {
 		"Content-Type": "application/json",
 		Accept: "application/json",
 	},
-	// withCredentials: true,
+	withCredentials: true,
 });
 export default apiClient;

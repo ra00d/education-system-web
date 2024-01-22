@@ -11,7 +11,11 @@ export const LoadingButton = ({
 	return (
 		<Button
 			{...props}
-			className={cn("flex justify-center items-center overflow-hidden", className)}
+			className={cn(
+				"flex justify-center items-center overflow-hidden",
+				className,
+			)}
+			disabled={loading}
 		>
 			{loading ? <Loading size={32} /> : children}
 		</Button>

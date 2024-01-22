@@ -7,7 +7,7 @@ export type ClassCardProps = {
 export const ClassCard = ({ level }: ClassCardProps) => {
 	return (
 		<Card>
-			<div className="z-1 bg-white rounded-md p-2">
+			<div className="z-1  rounded-md p-2">
 				{" "}
 				<div className="grid grid-cols-3 gap-2">
 					<div className="col-span-2">

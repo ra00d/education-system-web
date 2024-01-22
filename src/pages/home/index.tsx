@@ -8,11 +8,14 @@ import {
 	TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { TeachersList } from "../teachers/Teachers";
 // type tabs=['student','teacher']  const;
 export default function HomePage() {
+	const navigate = useNavigate();
 	const [type, setType] = useState("student");
 	return (
-		<div className="p-3 bg-card  rounded-md shadow-md h-[calc(100vh-6rem)] max-h-fit mr-3 ">
+		<div className="p-3 pt-1 bg-card  rounded-md shadow-md h-[calc(100vh-6rem)] max-h-fit mr-3 ">
 			<Tabs
 				defaultValue={type}
 				onValueChange={(value) => setType(value)}
@@ -36,6 +39,11 @@ export default function HomePage() {
 									size: "icon",
 									className: "cursor-pointer text-white",
 								})}
+								onClick={() => {
+									type === "student"
+										? navigate("/students/new")
+										: navigate("/teachers/new");
+								}}
 							/>
 						</TooltipTrigger>
 						<TooltipContent>
@@ -47,7 +55,7 @@ export default function HomePage() {
 					<StudentsList />
 				</TabsContent>
 				<TabsContent value="teacher" className="h-full ">
-					<StudentsList />
+					<TeachersList />
 				</TabsContent>
 			</Tabs>
 		</div>

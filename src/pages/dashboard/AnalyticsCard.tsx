@@ -9,7 +9,7 @@ import { Link } from "react-router-dom";
 export type AnalayticsCardPropType = {
 	icon: ReactNode;
 	title: string;
-	value: string;
+	value?: number;
 	link?: string;
 };
 export const AnalyticsCard = ({
@@ -24,7 +24,7 @@ export const AnalyticsCard = ({
 				<div className="">{icon}</div>
 				<div className="flex flex-col">
 					<p className="text-2xl capitalize">{title}</p>
-					<p>{value}</p>
+					<h2>{value ?? 0}</h2>
 				</div>
 			</CardContent>
 			<Separator className="" />

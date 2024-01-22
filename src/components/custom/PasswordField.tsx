@@ -1,6 +1,6 @@
 import { SetStateAction, useState } from "react";
 import { MdVisibility, MdVisibilityOff } from "react-icons/md";
-import { forwardRef} from "react";
+import { forwardRef } from "react";
 import { Input, InputProps } from "../ui/input";
 import { cn } from "@/lib/utils";
 export type InputWithIconProps = InputProps;
@@ -40,13 +40,13 @@ export const PasswordField = forwardRef<HTMLInputElement, InputWithIconProps>(
 		return (
 			<div
 				className={cn(
-					"flex bg-[#F7F7F8] text-black rounded-md w-full items-center pr-7",
+					"flex bg-background  rounded-md w-full items-center pr-7",
 					"focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2",
 				)}
 			>
 				<Input
 					ref={ref}
-					type={showPass?"text":"password"}
+					type={showPass ? "text" : "password"}
 					className={cn(
 						"bg-transparent pointer-events-auto border-none focus-visible:ring-0 focus-visible:ring-offset-0",
 						className,
