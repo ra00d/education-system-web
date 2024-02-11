@@ -19,14 +19,14 @@ export default function HomePage() {
 			<Tabs
 				defaultValue={type}
 				onValueChange={(value) => setType(value)}
-				className="w-full mt-5 bg-transparent h-full"
+				className="w-full mt-5 h-full"
 			>
 				<div className="flex w-full  justify-between items-center">
-					<TabsList className="bg-transparent">
-						<TabsTrigger value="student" className="bg-transparent">
+					<TabsList className="">
+						<TabsTrigger value="student" className="">
 							Students
 						</TabsTrigger>
-						<TabsTrigger value="teacher" className="bg-transparent">
+						<TabsTrigger value="teacher" className="">
 							Teachers
 						</TabsTrigger>
 					</TabsList>

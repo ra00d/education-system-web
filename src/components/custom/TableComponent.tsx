@@ -29,7 +29,7 @@ export const TableComponent = ({
 									{headerGroup.headers.map((header) => {
 										return (
 											<TableHead
-												className="sticky top-0 bg-foreground text-background z-50 first:rounded-l-md last:rounded-r-md"
+												className="sticky top-0 bg-muted z-50 first:rounded-l-md last:rounded-r-md"
 												key={header.id}
 											>
 												{header.isPlaceholder
@@ -79,25 +79,29 @@ export const TableComponent = ({
 						</TableBody>
 					</Table>
 				</TableContainer>
-				<div className="flex z-10 rounded-md items-center justify-center gap-2 py-2">
-					<Button
-						variant="outline"
-						className="text-black"
-						size="sm"
-						onClick={() => table.previousPage()}
-						disabled={!table.getCanPreviousPage()}
-					>
-						Previous
-					</Button>
-					<Button
-						variant="outline"
-						className="text-black"
-						size="sm"
-						onClick={() => table.nextPage()}
-						disabled={!table.getCanNextPage()}
-					>
-						Next
-					</Button>
+				<div className="flex items-center justify-end space-x-2 py-4">
+					<div className="flex-1 text-sm text-muted-foreground">
+						{table.getFilteredSelectedRowModel().rows.length} of{" "}
+						{table.getFilteredRowModel().rows.length} row(s) selected.
+					</div>
+					<div className="space-x-2">
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={() => table.previousPage()}
+							disabled={!table.getCanPreviousPage()}
+						>
+							Previous
+						</Button>
+						<Button
+							variant="outline"
+							size="sm"
+							onClick={() => table.nextPage()}
+							disabled={!table.getCanNextPage()}
+						>
+							Next
+						</Button>
+					</div>
 				</div>
 			</div>
 		</div>

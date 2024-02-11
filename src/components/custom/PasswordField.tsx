@@ -40,8 +40,9 @@ export const PasswordField = forwardRef<HTMLInputElement, InputWithIconProps>(
 		return (
 			<div
 				className={cn(
-					"flex bg-background  rounded-md w-full items-center pr-7",
+					"flex bg-background border border-input rounded-md w-full items-center pr-7 rtl:pl-7",
 					"focus-within:outline-none focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2",
+					className,
 				)}
 			>
 				<Input

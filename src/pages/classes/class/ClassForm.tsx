@@ -75,38 +75,38 @@ export const ClassForm = () => {
 								);
 							}}
 						/>
-						<FormField
-							control={form.control}
-							name="level_id"
-							render={({ field }) => {
-								return (
-									<FormItem>
-										<FormLabel>Level</FormLabel>
-										<Select
-											value={form.watch("level_id")?.toString()}
-											onValueChange={(value) => field.onChange(Number(value))}
-										>
-											<FormControl>
-												<SelectTrigger>
-													<SelectValue placeholder="Select a level" />
-												</SelectTrigger>
-											</FormControl>
-											<SelectContent>
-												{levels?.map((level) => (
-													<SelectItem
-														key={level.id}
-														value={level.id.toString()}
-													>
-														{level.name}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
-										<FormMessage />
-									</FormItem>
-								);
-							}}
-						/>
+						{/* <FormField */}
+						{/* 	control={form.control} */}
+						{/* 	name="level_id" */}
+						{/* 	render={({ field }) => { */}
+						{/* 		return ( */}
+						{/* 			<FormItem> */}
+						{/* 				<FormLabel>Level</FormLabel> */}
+						{/* 				<Select */}
+						{/* 					value={form.watch("level_id")?.toString()} */}
+						{/* 					onValueChange={(value) => field.onChange(Number(value))} */}
+						{/* 				> */}
+						{/* 					<FormControl> */}
+						{/* 						<SelectTrigger> */}
+						{/* 							<SelectValue placeholder="Select a level" /> */}
+						{/* 						</SelectTrigger> */}
+						{/* 					</FormControl> */}
+						{/* 					<SelectContent> */}
+						{/* 						{levels?.map((level) => ( */}
+						{/* 							<SelectItem */}
+						{/* 								key={level.id} */}
+						{/* 								value={level.id.toString()} */}
+						{/* 							> */}
+						{/* 								{level.name} */}
+						{/* 							</SelectItem> */}
+						{/* 						))} */}
+						{/* 					</SelectContent> */}
+						{/* 				</Select> */}
+						{/* 				<FormMessage /> */}
+						{/* 			</FormItem> */}
+						{/* 		); */}
+						{/* 	}} */}
+						{/* /> */}
 						<FormField
 							control={form.control}
 							name="course_id"
@@ -124,7 +124,7 @@ export const ClassForm = () => {
 												</SelectTrigger>
 											</FormControl>
 											<SelectContent>
-												{courses?.result.map((course: any) => (
+												{courses?.map((course: any) => (
 													<SelectItem
 														key={course.id}
 														value={course.id.toString()}

@@ -1,29 +1,61 @@
 import * as z from "zod";
 
+export type User = {
+	id: number | string;
+	name: string;
+	email: string;
+	phone: string;
+};
+
 // STUDENT TYPES
-export const studentSchema = z.object({
-	name: z
-		.string({ invalid_type_error: "the name must be in characters" })
-		.min(3, { message: "This field must be more than 3 letters" }),
-	email: z.string().email({ message: "This is not a valid email" }),
-	password: z.string().min(2, {
-		message: "Password must be more than 6 characters",
-	}),
-	level: z.number(),
-});
+export const studentSchema = z
+	.object({
+		name: z
+			.string({ invalid_type_error: "the name must be in characters" })
+			.min(3, { message: "This field must be more than 3 letters" }),
+		email: z.string().email({ message: "This is not a valid email" }),
+		password: z.string().min(2, {
+			message: "Password must be more than 6 characters",
+		}),
+		password_confirmation: z.string({
+			required_error: "password does not match",
+		}),
+
+		level: z.number({ required_error: "level is required" }),
+		birthdat: z.date({ required_error: "birth date is required" }),
+		grade: z.string({ required_error: "the grade is required" }),
+	})
+	.refine(
+		({ password, password_confirmation }) => password_confirmation === password,
+		{
+			message: "passwords does not match",
+			path: ["password_confirmation"],
+		},
+	);
 export type CreateStudentType = z.infer<typeof studentSchema>;
 
 // TEACHER TYPES
-export const teacherSchema = z.object({
-	name: z
-		.string({ invalid_type_error: "the name must be in characters" })
-		.min(3, { message: "This field must be more than 3 letters" }),
-	email: z.string().email({ message: "This is not a valid email" }),
-	password: z.string().min(2, {
-		message: "Password must be more than 6 characters",
-	}),
-	degree: z.string(),
-});
+export const teacherSchema = z
+	.object({
+		name: z
+			.string({ invalid_type_error: "the name must be in characters" })
+			.min(3, { message: "This field must be more than 3 letters" }),
+		email: z.string().email({ message: "This is not a valid email" }),
+		password: z.string().min(6, {
+			message: "Password must be more than 6 characters",
+		}),
+		password_confirmation: z.string({
+			required_error: "password does not match",
+		}),
+		degree: z.string(),
+	})
+	.refine(
+		({ password, password_confirmation }) => password_confirmation === password,
+		{
+			message: "passwords does not match",
+			path: ["password_confirmation"],
+		},
+	);
 export type CreateTeacherType = z.infer<typeof teacherSchema>;
 
 export const examSchema = z.object({
@@ -37,7 +69,9 @@ export const courseSchema = z.object({
 	name: z.string({ required_error: "the name is required" }),
 	description: z.string({ required_error: "the description is required" }),
 	start_at: z.date({ required_error: "the start at date is required" }),
+	end_at: z.date({ required_error: "the end at date is required" }),
 	cover_img: z.any({ required_error: "the cover image is required" }),
+	price: z.number({ required_error: "the price is required" }),
 	level: z.number({
 		required_error: "the level is required",
 		invalid_type_error: "the level must be a number",

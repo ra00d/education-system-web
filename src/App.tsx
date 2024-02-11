@@ -6,9 +6,18 @@ import AppRouter from "./common/config/routes";
 import { ThemeProvider } from "./common/context/theme-context";
 import { TooltipProvider } from "./components/ui/tooltip";
 import { Toaster } from "./components/ui/toaster";
-// import { ThemeProvider } from "./common/context/theme-context";
+import { socket } from "@/common/config/socket";
+import { useEffect } from "react";
 
 function App() {
+	useEffect(() => {
+		socket.on("connected", () => {
+			console.log("connected");
+		});
+		socket.emit("test", {}, (data: any) => {
+			console.log(data);
+		});
+	}, []);
 	return (
 		<QueryClientProvider client={queryClient}>
 			<ThemeProvider defaultTheme="light" storageKey="vite-ui-theme">

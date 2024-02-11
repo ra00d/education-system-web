@@ -1,4 +1,11 @@
-import { Book, CircleUserRound, Edit, Menu, Trash } from "lucide-react";
+import {
+	Book,
+	CircleUserRound,
+	DollarSign,
+	Edit,
+	Menu,
+	Trash,
+} from "lucide-react";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { Separator } from "../ui/separator";
@@ -64,7 +71,7 @@ export const CourseCard = (props: CourseCardProps) => {
 								{props.name}
 							</p>
 							<p className=" flex gap-1">
-								<Menu />
+								<DollarSign />
 								{props.level}
 							</p>
 							<p className="flex gap-1 ">

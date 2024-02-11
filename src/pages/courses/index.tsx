@@ -12,7 +12,9 @@ export const CoursesPage = () => {
 		queryFn: async () => {
 			return await getAllCourses();
 		},
+		placeholderData: [],
 	});
+	console.log(data);
 
 	return (
 		<Card className="p-2 ">
@@ -25,17 +27,18 @@ export const CoursesPage = () => {
 					<div>Sorry something went wrong</div>
 				) : (
 					<div className="grid md:grid-cols-3 gap-3 p-2 h-full">
-						{data?.result?.map((item: any) => (
-							<CourseCard
-								cover={item?.cover_img}
-								startAt={item?.start_at}
-								key={item?.id}
-								name={item?.name}
-								level={item?.level.name}
-								id={item?.id}
-								description={item?.description}
-							/>
-						))}
+						{data.length > 0 &&
+							data?.map((item: any) => (
+								<CourseCard
+									cover={item?.cover_img}
+									startAt={item?.start_at}
+									key={item?.id}
+									name={item?.name}
+									level={item?.price}
+									id={item?.id}
+									description={item?.description}
+								/>
+							))}
 					</div>
 				)}
 			</ScrollArea>

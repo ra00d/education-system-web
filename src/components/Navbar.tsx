@@ -8,10 +8,13 @@ import {
 	TooltipProvider,
 	TooltipTrigger,
 } from "./ui/tooltip";
-import { Printer } from "lucide-react";
+import { LogOut, Printer } from "lucide-react";
 import { Separator } from "./ui/separator";
+import { Button } from "./ui/button";
+import { useAuth } from "@/common/stores/auth";
 
 export const Navbar = () => {
+	const setUser = useAuth((state) => state.setUser);
 	return (
 		<div className="flex mt-2 py-2 flex-col gap-5  items-center">
 			<NavLink to="/">
@@ -40,9 +43,7 @@ export const Navbar = () => {
 						</NavLink>
 						<TooltipPortal>
 							<TooltipContent
-								side="top"
-								// sideOffset={8}
-								// align="start"
+								side="right"
 								alignOffset={10}
 								avoidCollisions={false}
 							>
@@ -53,6 +54,19 @@ export const Navbar = () => {
 					</Tooltip>
 				</TooltipProvider>
 			))}
+			<Button
+				variant="ghost"
+				onClick={() => {
+					setUser({
+						name: "guest",
+						id: 1,
+						email: "email@email.com",
+						phone: "w7633",
+					});
+				}}
+			>
+				<LogOut />
+			</Button>
 		</div>
 	);
 };

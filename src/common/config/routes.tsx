@@ -11,10 +11,12 @@ import { ExamForm } from "@/pages/exams/exam/ExamForm";
 import LoginPage from "@/pages/login";
 import { MonitoringPage } from "@/pages/monitoring";
 import { Questions } from "@/pages/questions/questions";
+import { Room } from "@/pages/rooms/room";
 import SignUp from "@/pages/signup";
 import { StudentForm } from "@/pages/students/student/Form";
 import { TeacherForm } from "@/pages/teachers/teacher/TeacherForm";
-import { RouteObject, createBrowserRouter } from "react-router-dom";
+import { ChevronRight } from "lucide-react";
+import { Link, RouteObject, createBrowserRouter } from "react-router-dom";
 
 const getPageName = (pageName: string) => () => ({ pageName: pageName });
 type RouteType = RouteObject;
@@ -27,16 +29,28 @@ export const routes: RouteType[] = [
 				path: "",
 				index: true,
 				loader: getPageName("Home"),
+				handle: getPageName("Home")(),
 				element: <DashboardPage />,
 			},
 			{
 				loader: getPageName("accounts"),
 				path: "/accounts",
+				handle: getPageName("accounts")(),
 				element: <AccountsPage />,
 			},
 			{
 				path: "classes",
 				loader: getPageName("classes"),
+				handle: {
+					crumb: () => (
+						<Link to="/" className="bg-red-500">
+							<div className="flex">
+								<span>Dashboard</span> <ChevronRight className="mx-2" />
+							</div>{" "}
+						</Link>
+					),
+					pageName: "classes",
+				},
 				children: [
 					{
 						index: true,
@@ -45,12 +59,16 @@ export const routes: RouteType[] = [
 					{
 						path: ":id",
 						Component: ClassForm,
+						handle: {
+							crumb: () => <Link to="/classes">Classes</Link>,
+						},
 					},
 				],
 			},
 			{
 				path: "exams",
 				loader: getPageName("Exams"),
+				handle: getPageName("Exams")(),
 				children: [
 					{
 						index: true,
@@ -66,6 +84,7 @@ export const routes: RouteType[] = [
 			{
 				path: "courses",
 				loader: getPageName("courses"),
+				handle: getPageName("courses")(),
 				children: [
 					{
 						index: true,
@@ -73,7 +92,6 @@ export const routes: RouteType[] = [
 					},
 					{
 						path: ":id",
-						loader: getPageName("Add Course"),
 						element: <CourseForm />,
 					},
 				],
@@ -82,6 +100,7 @@ export const routes: RouteType[] = [
 			{
 				path: "monitoring",
 				loader: getPageName("monitoring"),
+				handle: getPageName("monitoring"),
 				element: <MonitoringPage />,
 			},
 			{
@@ -98,6 +117,10 @@ export const routes: RouteType[] = [
 				path: "questions",
 				loader: getPageName("questions"),
 				Component: Questions,
+			},
+			{
+				path: "room",
+				element: <Room />,
 			},
 		],
 	},

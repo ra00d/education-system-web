@@ -1,15 +1,11 @@
 import { addCourse, getCourse, updateCourse } from "@/api/courses";
 import { getAllLevels } from "@/api/levels";
 import { API_BASE_URL } from "@/common/api";
+import { InputWithIcon } from "@/components/custom/InputWithIcon";
 import { LoadingButton } from "@/components/custom/LoadingButton";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import {
-	Card,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
+import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import {
 	Form,
 	FormControl,
@@ -25,14 +21,6 @@ import {
 	PopoverContent,
 	PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import { Separator } from "@/components/ui/separator";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
 import { cn, getResponseErrors } from "@/lib/utils";
@@ -40,7 +28,7 @@ import { CreateCourseType, courseSchema } from "@/types/models";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
-import { CalendarIcon } from "lucide-react";
+import { CalendarIcon, DollarSign } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
@@ -48,6 +36,8 @@ import { useParams } from "react-router-dom";
 export const CourseForm = () => {
 	const [image, setImage] = useState<string | ArrayBuffer | null | undefined>();
 	const { id } = useParams();
+	console.log(id);
+
 	const {
 		data: course,
 		refetch,
@@ -55,7 +45,7 @@ export const CourseForm = () => {
 	} = useQuery({
 		queryKey: ["course", id],
 		queryFn: () => getCourse(Number(id)),
-		enabled: id !== "new",
+		enabled: id !== "new" && !Number.isNaN(id),
 	});
 	// TOAST HOOKS
 	const { toast } = useToast();
@@ -65,21 +55,23 @@ export const CourseForm = () => {
 		defaultValues: {
 			name: "",
 			description: "",
-			level: undefined,
+			level: 1,
 			start_at: new Date(),
+			end_at: new Date(),
+			price: 0,
 		},
 	});
 	// GET ALL LEVEL
-	const { data } = useQuery({
-		queryKey: ["all-levels"],
-		queryFn: () => getAllLevels(),
-		placeholderData: [],
-	});
+	// const { data } = useQuery({
+	// 	queryKey: ["all-levels"],
+	// 	queryFn: () => getAllLevels(),
+	// 	placeholderData: [],
+	// });
 
 	// MUATION HOOKS
 	const { mutate, isPending } = useMutation({
 		mutationFn: async (newCourse: FormData) => {
-			return id === "new"
+			return id === "new" && Number.isNaN(id)
 				? await addCourse(newCourse)
 				: await updateCourse(newCourse, Number(id));
 		},
@@ -100,13 +92,14 @@ export const CourseForm = () => {
 			getResponseErrors(err.response, form.setError);
 		},
 	});
-	const onSubmit = (data: Record<string, any>) => {
+	const onSubmit = (data: CreateCourseType) => {
 		console.log(data);
 
 		const formData = new FormData();
 		for (const key in data) {
 			// biome-ignore lint/suspicious/noPrototypeBuiltins: <explanation>
 			if (data.hasOwnProperty(key) && key !== "cover_img") {
+				// @ts-ignore
 				const element = data[key];
 				formData.append(key, element);
 			}
@@ -119,6 +112,9 @@ export const CourseForm = () => {
 		if (id !== "new" && !isLoading) {
 			form.setValue("description", course?.description);
 			form.setValue("name", course?.name);
+			form.setValue("price", course?.price);
+			form.setValue("start_at", course?.start_at);
+			form.setValue("end_at", course?.end_at);
 			form.setValue("level", course?.level?.id);
 			setImage(`${API_BASE_URL}/${course?.cover_img}`);
 		}
@@ -153,31 +149,42 @@ export const CourseForm = () => {
 							/>
 							<FormField
 								control={form.control}
-								name="level"
+								name="price"
 								render={({ field }) => {
 									return (
 										<FormItem>
-											<FormLabel>Level</FormLabel>
-											<Select
-												value={form.watch("level")?.toString()}
-												onValueChange={(value) => field.onChange(Number(value))}
-											>
-												<FormControl>
-													<SelectTrigger>
-														<SelectValue placeholder="Select a level" />
-													</SelectTrigger>
-												</FormControl>
-												<SelectContent>
-													{data?.map((level) => (
-														<SelectItem
-															key={level.id}
-															value={level.id.toString()}
-														>
-															{level.name}
-														</SelectItem>
-													))}
-												</SelectContent>
-											</Select>
+											<FormLabel>Price</FormLabel>
+											<FormControl>
+												<InputWithIcon
+													type="number"
+													{...field}
+													onChange={(e) => {
+														field.onChange(Number(e.target.value));
+													}}
+													icon={<DollarSign />}
+												/>
+											</FormControl>
+
+											{/* <Select */}
+											{/* 	value={form.watch("level")?.toString()} */}
+											{/* 	onValueChange={(value) => field.onChange(Number(value))} */}
+											{/* > */}
+											{/* 	<FormControl> */}
+											{/* 		<SelectTrigger> */}
+											{/* 			<SelectValue placeholder="Select a level" /> */}
+											{/* 		</SelectTrigger> */}
+											{/* 	</FormControl> */}
+											{/* 	<SelectContent> */}
+											{/* 		{data?.map((level) => ( */}
+											{/* 			<SelectItem */}
+											{/* 				key={level.id} */}
+											{/* 				value={level.id.toString()} */}
+											{/* 			> */}
+											{/* 				{level.name} */}
+											{/* 			</SelectItem> */}
+											{/* 		))} */}
+											{/* 	</SelectContent> */}
+											{/* </Select> */}
 											<FormMessage />
 										</FormItem>
 									);
@@ -207,7 +214,7 @@ export const CourseForm = () => {
 								name="start_at"
 								render={({ field }) => (
 									<FormItem className="flex flex-col py-2">
-										<FormLabel>Date of birth</FormLabel>
+										<FormLabel>Start Date</FormLabel>
 										<Popover>
 											<PopoverTrigger asChild>
 												<FormControl>
@@ -239,9 +246,54 @@ export const CourseForm = () => {
 												/>
 											</PopoverContent>
 										</Popover>
-										<FormDescription>
-											When the course is going to start
-										</FormDescription>
+										{/* <FormDescription> */}
+										{/* 	When the course is going to start */}
+										{/* </FormDescription> */}
+										<FormMessage />
+									</FormItem>
+								)}
+							/>
+
+							<FormField
+								control={form.control}
+								name="end_at"
+								render={({ field }) => (
+									<FormItem className="flex flex-col py-2">
+										<FormLabel>End Date</FormLabel>
+										<Popover>
+											<PopoverTrigger asChild>
+												<FormControl>
+													<Button
+														variant={"outline"}
+														className={cn(
+															" h-10 pl-3 text-left font-normal",
+															!field.value && "text-muted-foreground",
+														)}
+													>
+														{field.value ? (
+															format(field.value, "PPP")
+														) : (
+															<span>Pick a date</span>
+														)}
+														<CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+													</Button>
+												</FormControl>
+											</PopoverTrigger>
+											<PopoverContent className="w-auto p-0" align="start">
+												<Calendar
+													mode="single"
+													selected={field.value}
+													onSelect={field.onChange}
+													// disabled={(date) =>
+													// 	date > new Date() || date < new Date("1900-01-01")
+													// }
+													initialFocus
+												/>
+											</PopoverContent>
+										</Popover>
+										{/* <FormDescription> */}
+										{/* 	When the course is going to start */}
+										{/* </FormDescription> */}
 										<FormMessage />
 									</FormItem>
 								)}

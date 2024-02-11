@@ -13,7 +13,7 @@ export const Loading = ({
 				color={color ?? "black"}
 				className={cn("animate-spin", className)}
 			/>
-			<p>Loading...</p>
+			{/* <p>Loading...</p> */}
 		</div>
 	);
 };

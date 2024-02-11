@@ -111,7 +111,6 @@ export const TeacherForm = () => {
 								);
 							}}
 						/>
-
 						<FormField
 							control={form.control}
 							name="password"
@@ -129,7 +128,7 @@ export const TeacherForm = () => {
 						/>
 						<FormField
 							control={form.control}
-							name="password"
+							name="password_confirmation"
 							render={({ field }) => {
 								return (
 									<FormItem>

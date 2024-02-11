@@ -1,5 +1,5 @@
 import apiClient from "@/common/api";
-import { CreateCourseType } from "@/types/models";
+// import { CreateCourseType } from "@/types/models";
 
 const END_POINT = "course";
 
@@ -23,5 +23,6 @@ export async function deleteCourse(id: number) {
 }
 
 export async function updateCourse(data: FormData, id: number) {
+	if (Number.isNaN(id)) return;
 	return await apiClient.putForm(`${END_POINT}/${id}`, data);
 }
