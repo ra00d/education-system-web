@@ -59,9 +59,23 @@ export const teacherSchema = z
 export type CreateTeacherType = z.infer<typeof teacherSchema>;
 
 export const examSchema = z.object({
-  time: z.date({ required_error: "Exam date is required" }),
-  course: z.number({ required_error: "The course is required" }),
-  teacher: z.number({}),
+  name: z.string({ required_error: "Exam name is required" }),
+  duration: z.coerce.number({ required_error: "Exam duration is required" }),
+  mark: z.coerce.number({ required_error: "Exam mark is required" }),
+  date: z.date({ required_error: "Exam date is required" }),
+  course: z.string({ required_error: "The course is required" }),
+  questions: z.array(
+    z.object({
+      content: z.string({ required_error: "Question content is required" }),
+      mark: z.coerce.number({ required_error: "Question mark is required" }),
+      answers: z.array(
+        z.object({
+          content: z.string({ required_error: "Answer content is required" }),
+          type: z.boolean({ required_error: "Answer type is required" }),
+        }),
+      ),
+    }),
+  ),
 });
 export type CreateExamType = z.infer<typeof examSchema>;
 

@@ -36,11 +36,14 @@ export default function LoginPage() {
   function onSubmit(values: z.infer<typeof formSchema>) {
     axios
       .post("http://localhost:3000/login", values)
-      .then(() => navigate("/"))
+      .then((res) => {
+        localStorage.setItem("token", res.data.accessToken);
+        localStorage.setItem("user", JSON.stringify(res.data));
+        navigate("/");
+      })
       .catch((err) => {
         setErrMsg(err.response.data.message);
       });
-    console.log(values);
   }
   return (
     <div className="flex justify-center items-center h-screen">
