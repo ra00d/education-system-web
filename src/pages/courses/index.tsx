@@ -7,41 +7,40 @@ import { getAllCourses } from "@/api/courses";
 import { Loading } from "@/components/custom/Progress";
 
 export const CoursesPage = () => {
-	const { data, isLoading, isError } = useQuery({
-		queryKey: ["courses"],
-		queryFn: async () => {
-			return await getAllCourses();
-		},
-		placeholderData: [],
-	});
-	console.log(data);
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["courses"],
+    queryFn: async () => {
+      return await getAllCourses();
+    },
+    placeholderData: [],
+  });
 
-	return (
-		<Card className="p-2 ">
-			<h1>Courses</h1>
-			<CoursesHeader />
-			<ScrollArea className="h-[calc(100vh-13rem)]">
-				{isLoading ? (
-					<Loading />
-				) : isError ? (
-					<div>Sorry something went wrong</div>
-				) : (
-					<div className="grid md:grid-cols-3 gap-3 p-2 h-full">
-						{data.length > 0 &&
-							data?.map((item: any) => (
-								<CourseCard
-									cover={item?.cover_img}
-									startAt={item?.start_at}
-									key={item?.id}
-									name={item?.name}
-									level={item?.price}
-									id={item?.id}
-									description={item?.description}
-								/>
-							))}
-					</div>
-				)}
-			</ScrollArea>
-		</Card>
-	);
+  return (
+    <Card className="p-2 ">
+      <h1>Courses</h1>
+      <CoursesHeader />
+      <ScrollArea className="h-[calc(100vh-13rem)]">
+        {isLoading ? (
+          <Loading />
+        ) : isError ? (
+          <div>Sorry something went wrong</div>
+        ) : (
+          <div className="grid md:grid-cols-3 gap-3 p-2 h-full">
+            {data.length > 0 &&
+              data?.map((item: any) => (
+                <CourseCard
+                  cover={item?.coverImg}
+                  startAt={item?.startDate}
+                  key={item?.id}
+                  name={item?.name}
+                  level={item?.price}
+                  id={item?.id}
+                  description={item?.description}
+                />
+              ))}
+          </div>
+        )}
+      </ScrollArea>
+    </Card>
+  );
 };

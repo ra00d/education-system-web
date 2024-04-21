@@ -4,26 +4,23 @@ import apiClient from "@/common/api";
 import { CreateStudentType } from "@/types/models";
 import { StudentsResponseType } from "@/types/responses";
 
-const END_POINT = "student";
+const END_POINT = "students";
 
 // GET ALL STUDENTS
-export async function getAllStudent(
-	page: number,
-	limit: number,
-): Promise<StudentsResponseType> {
-	const data = await apiClient.get<StudentsResponseType>(END_POINT, {
-		params: {
-			page,
-			limit,
-		},
-	});
-	return data.data;
+export async function getAllStudent(page: number, limit: number): Promise<any> {
+  const data = await apiClient.get<any>(END_POINT, {
+    params: {
+      page,
+      limit,
+    },
+  });
+  return data.data;
 }
 
 // ADD STUDENT
 export async function addStudent(
-	body: CreateStudentType,
+  body: CreateStudentType,
 ): Promise<{ id: string }> {
-	const response = await apiClient.post(END_POINT, body);
-	return response.data;
+  const response = await apiClient.post(END_POINT, body);
+  return response.data;
 }
