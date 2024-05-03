@@ -26,3 +26,7 @@ export async function updateCourse(data: FormData, id: string) {
   if (!id) throw "id is required";
   return await apiClient.patchForm(`${END_POINT}/${id}`, data);
 }
+export async function getCourseInfo(id: string) {
+  const res = await apiClient.get(`${END_POINT}/${id}/info`);
+  return res.data;
+}

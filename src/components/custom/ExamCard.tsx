@@ -1,11 +1,12 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { Menu, ShieldQuestion, Watch } from "lucide-react";
+import { Eye, Menu, ShieldQuestion, Trash2, Watch } from "lucide-react";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardFooter } from "../ui/card";
 import { Separator } from "../ui/separator";
 import { ConfirmDialog } from "./ConfirmDialog";
 import { deleteExam } from "@/api/exams";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 export const ExamCard = (props: { [_key: string]: any | undefined }) => {
   const [open, setOpen] = useState(false);
@@ -66,13 +67,20 @@ export const ExamCard = (props: { [_key: string]: any | undefined }) => {
           <Menu />
           <span>{props?.questions?.length}</span>
         </div>
-        <Button
-          variant={"destructive"}
-          className="w-full mt-5"
-          onClick={() => setOpen(true)}
-        >
-          Delete
-        </Button>
+        <div className=" w-full mt-5 flex items-center justify-between ">
+          <Button className="bg-green-400 hover:bg-green-300" asChild>
+            <Link to={`/exams/${props.id}`}>
+              <Eye />
+            </Link>
+          </Button>
+          <Button
+            variant={"destructive"}
+            className=""
+            onClick={() => setOpen(true)}
+          >
+            <Trash2 />
+          </Button>
+        </div>
       </CardFooter>
     </Card>
   );

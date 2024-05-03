@@ -1,19 +1,18 @@
+import { deleteCourse } from "@/api/courses";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   Book,
   CircleUserRound,
   DollarSign,
   Edit,
-  Menu,
+  Eye,
   Trash,
 } from "lucide-react";
+import { useState } from "react";
+import { Link } from "react-router-dom";
 import { Button } from "../ui/button";
 import { Card } from "../ui/card";
 import { Separator } from "../ui/separator";
-import { Link } from "react-router-dom";
-import { API_BASE_URL } from "@/common/api";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteCourse } from "@/api/courses";
-import { useState } from "react";
 import { ConfirmDialog } from "./ConfirmDialog";
 
 type CourseCardProps = {
@@ -32,6 +31,7 @@ export const CourseCard = (props: CourseCardProps) => {
   const [open, setOpen] = useState(false);
   const mutation = useMutation({
     mutationKey: ["delete-course", props.id],
+    //@ts-ignore
     mutationFn: (id: number) => {
       return props.deleteAction ? props.deleteAction(id) : deleteCourse(id);
     },
@@ -88,6 +88,12 @@ export const CourseCard = (props: CourseCardProps) => {
                   <Edit />
                 </Link>
               </Button>
+              <Button variant="ghost">
+                <Link to={`${props.id}/info`}>
+                  <Eye />
+                </Link>
+              </Button>
+
               <Button
                 onClick={() => {
                   setOpen(true);
