@@ -5,7 +5,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { StudentType } from "@/types/models";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { ColumnDef } from "@tanstack/react-table";
-import { Edit, Trash2 } from "lucide-react";
+import { Edit } from "lucide-react";
 import { useState } from "react";
 
 export const studentsTableColumns: ColumnDef<StudentType>[] = [
@@ -70,17 +70,17 @@ export const studentsTableColumns: ColumnDef<StudentType>[] = [
             }}
           />
           <div className="flex gap-8 justify-center">
-            <Button variant="ghost">
+            <Button variant="ghost" onClick={() => setOpen(true)}>
               <Edit color="green" />
             </Button>
-            <Button
-              variant={"ghost"}
-              onClick={() => {
-                setOpen(true);
-              }}
-            >
-              <Trash2 color="red" />
-            </Button>
+            {/* <Button */}
+            {/*   variant={"ghost"} */}
+            {/*   onClick={() => { */}
+            {/*     setOpen(true); */}
+            {/*   }} */}
+            {/* > */}
+            {/*   <Trash2 color="red" /> */}
+            {/* </Button> */}
           </div>
         </>
       );

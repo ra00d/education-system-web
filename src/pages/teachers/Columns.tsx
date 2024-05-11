@@ -1,8 +1,6 @@
-import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { TeacherType } from "@/types/models";
 import { ColumnDef } from "@tanstack/react-table";
-import { Edit, Trash2 } from "lucide-react";
 
 export const teachersTableColumns: ColumnDef<TeacherType>[] = [
   {
@@ -41,20 +39,20 @@ export const teachersTableColumns: ColumnDef<TeacherType>[] = [
     accessorKey: "degree",
     header: "Degree",
   },
-  {
-    id: "actions",
-    header: () => <div className="text-center">Actions</div>,
-    cell: ({}) => {
-      return (
-        <div className="flex gap-8 justify-center">
-          <Button variant="ghost">
-            <Edit color="green" />
-          </Button>
-          <Button variant={"ghost"}>
-            <Trash2 color="red" />
-          </Button>
-        </div>
-      );
-    },
-  },
+  // {
+  //   id: "actions",
+  //   header: () => <div className="text-center">Actions</div>,
+  //   cell: ({}) => {
+  //     return (
+  //       <div className="flex gap-8 justify-center">
+  //         {/* <Button variant="ghost"> */}
+  //         {/*   <Edit color="green" /> */}
+  //         {/* </Button> */}
+  //         {/* <Button variant={"ghost"}> */}
+  //         {/*   <Trash2 color="red" /> */}
+  //         {/* </Button> */}
+  //       </div>
+  //     );
+  //   },
+  // },
 ];
