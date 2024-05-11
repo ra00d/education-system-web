@@ -110,6 +110,19 @@ export const routes: RouteType[] = [
         ],
       },
 
+      // {
+      //   path: "video",
+      //   children: [
+      //     {
+      //       path: "new",
+      //       element: <MyApp />,
+      //     },
+      //     {
+      //       path: "join",
+      //       element: <JoinVideo />,
+      //     },
+      //   ],
+      // },
       {
         path: "monitoring",
         loader: getPageName("monitoring"),
