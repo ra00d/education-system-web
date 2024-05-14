@@ -1,6 +1,6 @@
 import { ListChecksIcon, User } from "lucide-react";
 import { ReactNode } from "react";
-import { MdClass, MdDashboard, MdLibraryBooks } from "react-icons/md";
+import { MdDashboard, MdLibraryBooks } from "react-icons/md";
 
 export type NavItem = {
   path: string;
@@ -30,11 +30,11 @@ export const navItems: NavItem[] = [
     title: "Exams",
     icon: <ListChecksIcon size="28" />,
   },
-  {
-    path: "classes",
-    title: "Classes",
-    icon: <MdClass size="28" />,
-  },
+  // {
+  //   path: "classes",
+  //   title: "Classes",
+  //   icon: <MdClass size="28" />,
+  // },
 
   // {
   //   path: "monitoring",

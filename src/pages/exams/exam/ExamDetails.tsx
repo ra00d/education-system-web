@@ -18,8 +18,9 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
+import { useToast } from "@/components/ui/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { Calendar, ChevronsUpDown, Plus, Trash2 } from "lucide-react";
+import { Calendar, ChevronsUpDown, Loader2, Plus, Trash2 } from "lucide-react";
 import { useRef, useState } from "react";
 import { UseFormReturn, useFieldArray, useForm } from "react-hook-form";
 import { useParams } from "react-router-dom";
@@ -29,11 +30,35 @@ const Question = ({
 }: {
   q: {
     content: string;
+    id: string;
     mark: any;
     answers: { content: string; type: boolean }[];
   };
 }) => {
+  const toast = useToast();
   const [isOpen, setIsOpen] = useState(false);
+
+  const { id } = useParams();
+  const client = useQueryClient();
+  const { mutate, isPending } = useMutation({
+    mutationFn: async () => {
+      await apiClient.delete(`/exams/questions/${q?.id}`);
+    },
+    onSuccess: () => {
+      client.invalidateQueries({ queryKey: [`exam-${id}`] });
+      toast.toast({
+        title: "Success",
+        description: "Question updated successfully",
+      });
+    },
+    onError: () => {
+      toast.toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Something went wrong",
+      });
+    },
+  });
 
   return (
     <Collapsible
@@ -42,13 +67,23 @@ const Question = ({
       className="w-[350px] space-y-2"
     >
       <div className="flex items-center justify-between space-x-4 px-4">
-        <h4 className="text-sm font-semibold">{q.content}</h4>
+        <h4 className="text-sm font-semibold flex-1">{q.content}</h4>
         <CollapsibleTrigger asChild>
           <Button variant="ghost" size="sm" className="w-9 p-0">
             <ChevronsUpDown className="h-4 w-4" />
             <span className="sr-only">Toggle</span>
           </Button>
         </CollapsibleTrigger>
+        <Button
+          variant={"destructive"}
+          size="icon"
+          disabled={isPending}
+          onClick={async () => {
+            mutate();
+          }}
+        >
+          {isPending ? <Loader2 className="animate-spin" /> : <Trash2 />}
+        </Button>
       </div>
       <div className="rounded-md border px-4 py-3 font-mono text-sm bg-green-300">
         {q.answers.find((val) => val.type)?.content}

@@ -60,7 +60,7 @@ export const CourseCard = (props: CourseCardProps) => {
             {/* <Skeleton className="w-[120px] h-[120px] bg-gray-400" /> */}
             <img
               className="w-[120px] h-[120px]"
-              src={`${props.cover}`}
+              src={`${props.cover.replace("10.0.2.2", "localhost")}`}
               alt={props.name}
             />
           </div>

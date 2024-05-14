@@ -11,7 +11,9 @@ import { useTheme } from "../context/theme-context";
 const Layout = () => {
   const { setTheme, theme } = useTheme();
   const matches = useMatches();
-
+  if (!localStorage.getItem("token")) {
+    window.location.href = "/login";
+  }
   return (
     <div className="flex  p-0  overflow-hidden bg-background text-foreground relative h-screen ">
       <div className="shadow-md  bg-card w-fit pb-2   px-2  sticky top-0 h-screen ">

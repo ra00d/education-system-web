@@ -90,13 +90,23 @@ export const CourseInfo = () => {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {data.students.map((s) => (
-                  <TableRow key={s.id}>
-                    <TableCell>{s.name}</TableCell>
-                    <TableCell>28</TableCell>
-                    <TableCell>40</TableCell>
+                {data.exam.students.map((s) => (
+                  <TableRow key={s?.student?.id}>
+                    <TableCell>{s?.student.name}</TableCell>
+                    <TableCell>--</TableCell>
+                    <TableCell>{s?.mark}</TableCell>
                     <TableCell>
-                      <Badge>A</Badge>
+                      {data.exam?.mark / s?.mark >= 75 ? (
+                        <Badge className="bg-green-500">"A</Badge>
+                      ) : data.exam?.mark / s?.mark >= 60 ? (
+                        <Badge className="bg-blue-500"> B</Badge>
+                      ) : data.exam?.mark / s?.mark >= 50 ? (
+                        <Badge className="bg-yellow-500"> C</Badge>
+                      ) : data.exam?.mark / s?.mark >= 40 ? (
+                        <Badge className="bg-orange-500"> D</Badge>
+                      ) : (
+                        <Badge variant={"destructive"}> F</Badge>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}

@@ -40,7 +40,7 @@ export const ExamCard = (props: { [_key: string]: any | undefined }) => {
       <CardContent className="flex items-center gap-5 justify-between ">
         <div className="">
           <img
-            src={props?.course?.coverImg}
+            src={props?.course?.coverImg.replace("10.0.2.2", "localhost")}
             alt={props?.course?.name}
             className="w-24 h-24 rounded-md"
           />

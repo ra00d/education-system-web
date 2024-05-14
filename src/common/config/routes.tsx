@@ -82,33 +82,33 @@ export const routes: RouteType[] = [
           },
         ],
       },
-      {
-        path: "classes",
-        loader: getPageName("classes"),
-        handle: {
-          crumb: () => (
-            <Link to="/" className="bg-red-500">
-              <div className="flex">
-                <span>Dashboard</span> <ChevronRight className="mx-2" />
-              </div>{" "}
-            </Link>
-          ),
-          pageName: "classes",
-        },
-        children: [
-          {
-            index: true,
-            element: <ClassesPage />,
-          },
-          {
-            path: ":id",
-            Component: ClassForm,
-            handle: {
-              crumb: () => <Link to="/classes">Classes</Link>,
-            },
-          },
-        ],
-      },
+      // {
+      //   path: "classes",
+      //   loader: getPageName("classes"),
+      //   handle: {
+      //     crumb: () => (
+      //       <Link to="/" className="bg-red-500">
+      //         <div className="flex">
+      //           <span>Dashboard</span> <ChevronRight className="mx-2" />
+      //         </div>{" "}
+      //       </Link>
+      //     ),
+      //     pageName: "classes",
+      //   },
+      //   children: [
+      //     {
+      //       index: true,
+      //       element: <ClassesPage />,
+      //     },
+      //     {
+      //       path: ":id",
+      //       Component: ClassForm,
+      //       handle: {
+      //         crumb: () => <Link to="/classes">Classes</Link>,
+      //       },
+      //     },
+      //   ],
+      // },
 
       // {
       //   path: "video",

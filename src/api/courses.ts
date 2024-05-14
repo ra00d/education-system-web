@@ -24,7 +24,7 @@ export async function deleteCourse(id: number) {
 
 export async function updateCourse(data: FormData, id: string) {
   if (!id) throw "id is required";
-  return await apiClient.patchForm(`${END_POINT}/${id}`, data);
+  return await apiClient.putForm(`${END_POINT}/${id}`, data);
 }
 export async function getCourseInfo(id: string) {
   const res = await apiClient.get(`${END_POINT}/${id}/info`);
