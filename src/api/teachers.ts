@@ -1,6 +1,5 @@
 import apiClient from "@/common/api";
 import { CreateTeacherType } from "@/types/models";
-import { TeachersResponseType } from "@/types/responses";
 
 const END_POINT = "teachers";
 

@@ -1,308 +1,192 @@
-import { addClass, updateClass } from "@/api/classes";
-import { getAllCourses } from "@/api/courses";
-import { getAllLevels } from "@/api/levels";
-import { getAllTeachers } from "@/api/teachers";
-import { LoadingButton } from "@/components/custom/LoadingButton";
-import { Card } from "@/components/ui/card";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import { Textarea } from "@/components/ui/textarea";
-import { useToast } from "@/components/ui/use-toast";
-import { getResponseErrors } from "@/lib/utils";
-import { CreateClassType, classSchema } from "@/types/models";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { format, parse } from "date-fns";
-import { UseFormReturn, useForm } from "react-hook-form";
+/**
+ * v0 by Vercel.
+ * @see https://v0.dev/t/w0X9GYQPsKH
+ * Documentation: https://v0.dev/docs#integrating-generated-code-into-your-nextjs-app
+ */
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { getClass } from "@/api/classes";
+import { LoadingPage } from "@/components/custom/LoadingPage";
 
-export const ClassForm = () => {
+export function ClassDetails() {
 	const { id } = useParams();
-	const form = useForm<CreateClassType>({
-		resolver: zodResolver(classSchema),
-		defaultValues: {
-			name: "",
-			description: "",
-			start_at: new Date(),
-			end_at: new Date(),
+	const { data, isLoading } = useQuery({
+		queryKey: [`class-info-${id}`],
+		queryFn: () => {
+			return getClass(id!);
 		},
+		enabled: !!id,
 	});
-	const { isLoading, levels, courses, mutate, teachers } = useClassFormData(
-		id,
-		{
-			form,
-		},
-	);
-	const onSubmit = (data: CreateClassType) => {
-		// console.log(data.start_at);
+	if (!id) {
+		return <div>No cousre</div>;
+	}
+	if (isLoading) {
+		return <LoadingPage />;
+	}
+	console.log(data);
 
-		mutate(data);
-	};
 	return (
-		<Card className="p-2">
-			<Form {...form}>
-				<form
-					className="grid md:grid-cols-2 gap-2"
-					onSubmit={form.handleSubmit(onSubmit)}
-				>
+		<div className="flex flex-col min-h-screen">
+			<main className="flex-1 py-8 px-6">
+				<div className="container mx-auto grid grid-cols-1 md:grid-cols-2 gap-8">
 					<div>
-						<FormField
-							control={form.control}
-							name="name"
-							render={({ field }) => {
-								return (
-									<FormItem>
-										<FormLabel>Name</FormLabel>
-										<FormControl>
-											<Input {...field} />
-										</FormControl>
-										<FormMessage />
-									</FormItem>
-								);
-							}}
-						/>
-						{/* <FormField */}
-						{/* 	control={form.control} */}
-						{/* 	name="level_id" */}
-						{/* 	render={({ field }) => { */}
-						{/* 		return ( */}
-						{/* 			<FormItem> */}
-						{/* 				<FormLabel>Level</FormLabel> */}
-						{/* 				<Select */}
-						{/* 					value={form.watch("level_id")?.toString()} */}
-						{/* 					onValueChange={(value) => field.onChange(Number(value))} */}
-						{/* 				> */}
-						{/* 					<FormControl> */}
-						{/* 						<SelectTrigger> */}
-						{/* 							<SelectValue placeholder="Select a level" /> */}
-						{/* 						</SelectTrigger> */}
-						{/* 					</FormControl> */}
-						{/* 					<SelectContent> */}
-						{/* 						{levels?.map((level) => ( */}
-						{/* 							<SelectItem */}
-						{/* 								key={level.id} */}
-						{/* 								value={level.id.toString()} */}
-						{/* 							> */}
-						{/* 								{level.name} */}
-						{/* 							</SelectItem> */}
-						{/* 						))} */}
-						{/* 					</SelectContent> */}
-						{/* 				</Select> */}
-						{/* 				<FormMessage /> */}
-						{/* 			</FormItem> */}
-						{/* 		); */}
-						{/* 	}} */}
-						{/* /> */}
-						<FormField
-							control={form.control}
-							name="course_id"
-							render={({ field }) => {
-								return (
-									<FormItem>
-										<FormLabel>Course</FormLabel>
-										<Select
-											value={form.watch("course_id")?.toString()}
-											onValueChange={(value) => field.onChange(Number(value))}
-										>
-											<FormControl>
-												<SelectTrigger>
-													<SelectValue placeholder="Select a course" />
-												</SelectTrigger>
-											</FormControl>
-											<SelectContent>
-												{courses?.map((course: any) => (
-													<SelectItem
-														key={course.id}
-														value={course.id.toString()}
-													>
-														{course.name}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
-										<FormMessage />
-									</FormItem>
-								);
-							}}
-						/>
-						<FormField
-							control={form.control}
-							name="teacher_id"
-							render={({ field }) => {
-								return (
-									<FormItem>
-										<FormLabel>Teacher</FormLabel>
-										<Select
-											value={form.watch("teacher_id")?.toString()}
-											onValueChange={(value) => field.onChange(Number(value))}
-										>
-											<FormControl>
-												<SelectTrigger>
-													<SelectValue placeholder="Select a teacher" />
-												</SelectTrigger>
-											</FormControl>
-											<SelectContent>
-												{teachers?.result?.map((teacher: any) => (
-													<SelectItem
-														key={teacher.id}
-														value={teacher.id.toString()}
-													>
-														{teacher.name}
-													</SelectItem>
-												))}
-											</SelectContent>
-										</Select>
-										<FormMessage />
-									</FormItem>
-								);
-							}}
-						/>
+						<h2 className="text-xl font-bold mb-4">Participants</h2>
+						<Card>
+							<CardContent className="p-3 max-h-96 overflow-auto">
+								<ul className="space-y-2 h-96 overflow-auto divide ">
+									{data?.students?.map((student) => {
+										return (
+											<li key={student.id}>
+												<div className="flex items-center gap-2">
+													<div>
+														<div className="font-medium">{student.name}</div>
+														<div className="text-sm text-gray-500">
+															{student.email}
+														</div>
+													</div>
+												</div>
+											</li>
+										);
+									})}{" "}
+								</ul>
+							</CardContent>
+						</Card>
 					</div>
 					<div>
-						<FormField
-							control={form.control}
-							name="description"
-							render={({ field }) => {
-								return (
-									<FormItem>
-										<FormLabel>Description</FormLabel>
-										<FormControl>
-											<Textarea
-												className="min-h-[112px]"
-												placeholder="the course description"
-												{...field}
-											/>
-										</FormControl>
-									</FormItem>
-								);
-							}}
-						/>
-						<div className="grid grid-cols-2 gap-2">
-							<FormField
-								control={form.control}
-								name="start_at"
-								render={({ field }) => {
-									return (
-										<FormItem>
-											<FormLabel>start at</FormLabel>
-											<FormControl>
-												<Input
-													type="time"
-													{...field}
-													value={format(field.value, "HH:mm")}
-													onChange={(val) => {
-														field.onChange(
-															parse(val.target.value, "HH:m", new Date()),
-														);
-													}}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									);
-								}}
-							/>
-							<FormField
-								control={form.control}
-								name="end_at"
-								render={({ field }) => {
-									return (
-										<FormItem>
-											<FormLabel>ends at</FormLabel>
-											<FormControl>
-												<Input
-													type="time"
-													{...field}
-													value={format(field.value, "HH:mm")}
-													onChange={(val) => {
-														field.onChange(
-															parse(val.target.value, "HH:m", new Date()),
-														);
-													}}
-												/>
-											</FormControl>
-											<FormMessage />
-										</FormItem>
-									);
-								}}
-							/>
-						</div>{" "}
+						<h2 className="text-xl font-bold mb-4">Teacher</h2>
+						<Card>
+							<CardContent>
+								<div className="flex items-center gap-4">
+									<div>
+										<div className="font-medium text-lg">
+											{data?.course?.teacher?.name}
+										</div>
+										<div className="text-gray-500">
+											<MailIcon className="h-4 w-4 inline-block mr-1" />
+											{data?.course?.teacher?.email}
+										</div>
+										<div className="text-gray-500">
+											<PhoneIcon className="h-4 w-4 inline-block mr-1" />
+											+1 (555) 555-5555
+										</div>
+									</div>
+								</div>
+							</CardContent>
+						</Card>
 					</div>
-					<LoadingButton loading={isLoading} className="w-full  my-2">
-						{id === "new" ? "save" : "update"}
-					</LoadingButton>
-				</form>
-			</Form>
-		</Card>
+					<div className="col-span-1 md:col-span-2">
+						<h2 className="text-xl font-bold mb-4">Course Details</h2>
+						<Card>
+							<CardContent>
+								<div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+									<div>
+										<div className="font-medium text-lg">
+											{data?.course?.name}
+										</div>
+										<div className="text-gray-500">
+											{data?.course?.description}
+										</div>
+									</div>
+									<div>
+										<div className="font-medium">Start Date</div>
+										<div className="text-gray-500">
+											{data?.course?.startDate}
+										</div>
+										<div className="font-medium">End Date</div>
+										<div className="text-gray-500">{data?.course?.endDate}</div>
+									</div>
+								</div>
+							</CardContent>
+						</Card>
+					</div>
+				</div>
+			</main>
+		</div>
 	);
-};
+}
 
-const useClassFormData = (
-	id: string | undefined,
-	{
-		form,
-	}: {
-		form: UseFormReturn<CreateClassType>;
-	},
-) => {
-	const { data: courses, refetch } = useQuery({
-		queryKey: ["courses"],
-		queryFn: () => getAllCourses(),
-	});
-	// TOAST HOOKS
-	const { toast } = useToast();
+function CalendarIcon(props) {
+	return (
+		<svg
+			{...props}
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+		>
+			<path d="M8 2v4" />
+			<path d="M16 2v4" />
+			<rect width="18" height="18" x="3" y="4" rx="2" />
+			<path d="M3 10h18" />
+		</svg>
+	);
+}
 
-	// GET ALL LEVEL
-	const { data: levels } = useQuery({
-		queryKey: ["all-levels"],
-		queryFn: () => getAllLevels(),
-		placeholderData: [],
-	});
-	const { data: teachers } = useQuery({
-		queryKey: ["teachers"],
-		queryFn: () => getAllTeachers(),
-	});
-	// MUATION HOOKS
-	const { mutate, isPending } = useMutation({
-		mutationFn: (data: CreateClassType) => {
-			return id === "new" ? addClass(data) : updateClass(data, Number(id));
-		},
-		onSuccess: () => {
-			refetch();
-			toast({
-				title: `The class ${id === "new" ? "added" : "updated"} successfully`,
-				className:
-					"bg-green-400 text-white dark:text-white font-bold dark:bg-green-500",
-			});
-		},
-		onError: (err: any) => {
-			toast({
-				title: err.response?.data?.message,
-				className: "bg-destructive text-destructive-foreground dark:text-white",
-				duration: 2000,
-			});
-			getResponseErrors(err.response, form.setError);
-		},
-	});
-	return {
-		isLoading: isPending,
-		courses,
-		teachers,
-		levels,
-		mutate,
-	};
-};
+function MailIcon(props) {
+	return (
+		<svg
+			{...props}
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+		>
+			<rect width="20" height="16" x="2" y="4" rx="2" />
+			<path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+		</svg>
+	);
+}
+
+function PhoneIcon(props) {
+	return (
+		<svg
+			{...props}
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+		>
+			<path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+		</svg>
+	);
+}
+
+function UsersIcon(props) {
+	return (
+		<svg
+			{...props}
+			xmlns="http://www.w3.org/2000/svg"
+			width="24"
+			height="24"
+			viewBox="0 0 24 24"
+			fill="none"
+			stroke="currentColor"
+			strokeWidth="2"
+			strokeLinecap="round"
+			strokeLinejoin="round"
+		>
+			<path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+			<circle cx="9" cy="7" r="4" />
+			<path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+			<path d="M16 3.13a4 4 0 0 1 0 7.75" />
+		</svg>
+	);
+}
